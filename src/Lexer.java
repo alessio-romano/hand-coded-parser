@@ -42,10 +42,10 @@ public class Lexer {
             // Inserimento delle parole chiave nella stringTable. Questa scelta è stata fatta
             // al fine di non costruire un diagramma di transizione per ogni parola chiave.
             // Le parole chiave verranno "catturate" dal diagramma di transizione e gestite e di conseguenza.
-            String keywords[] = {"if", "then", "else", "while", "int", "float"};
+            int keywords[] = {sym.IF, sym.THEN, sym.ELSE, sym.DO, sym.WHILE, sym.INT, sym.FLOAT};
 
-            for(String x: keywords) {
-                symbolTable.add(idSymTab++, x, new Token(x.toUpperCase()));
+            for(int x: keywords) {
+                symbolTable.add(idSymTab++, sym.tokens[x], new Token(x));
             }
             return true;
         }
@@ -76,7 +76,7 @@ public class Lexer {
             c = buffer.charAt(forward);
             if(c == '\0') {
                 flag = false; //flag = false indica la fine del file
-                return new Token("EOF");
+                return new Token(sym.EOF);
             }
             forward++;
 
@@ -97,7 +97,7 @@ public class Lexer {
                     } else if (c == '=') {
                         state = 5;
                         beginLexem = forward;
-                        return new Token(RELOP, "EQ");
+                        return new Token(sym.EQ);
                     } else if (c == '>') {
                         state = 6;
                         //ID
@@ -119,61 +119,61 @@ public class Lexer {
                     //SEPARATORS
                     else if (c == ';') {
                         beginLexem = forward;
-                        return new Token("SEMICOLON");
+                        return new Token(sym.SEMICOLON);
                     } else if (c == ',') {
                         beginLexem = forward;
-                        return new Token("COMMA");
+                        return new Token(sym.COMMA);
                     } else if (c == '(') {
                         beginLexem = forward;
-                        return new Token("LPAR");
+                        return new Token(sym.LPAR);
                     } else if (c == ')') {
                         beginLexem = forward;
-                        return new Token("RPAR");
+                        return new Token(sym.RPAR);
                     } else if (c == '{') {
                         beginLexem = forward;
-                        return new Token("LBRAC");
+                        return new Token(sym.LBRAC);
                     } else if (c == '}') {
                         beginLexem = forward;
-                        return new Token("RBRAC");
+                        return new Token(sym.RBRAC);
                     }
                     else if(c != '\0'){
                         beginLexem = forward;
                         lessema+=c;
-                        return new Token("ERROR",lessema);
+                        return new Token(sym.ERROR,lessema);
                     }
                     break; //end case 0
                 case 1:
                     if (c == '=') {
                         state = 2;
                         beginLexem = forward;
-                        return new Token(RELOP, "LE");
+                        return new Token(sym.LE);
                     } else if (c == '>') {
                         state = 3;
                         beginLexem = forward;
-                        return new Token(RELOP, "NE");
+                        return new Token(sym.NE);
                     } else if (c == '-') {
                         state = 25;
                     } else {
                         state = 4;
                         retrack();
-                        return new Token(RELOP, "LT");
+                        return new Token(sym.LT);
                     } //end case 1
                     break;
                 case 25:
                     if (c == '-') {
                         state = 26;
                         beginLexem = forward;
-                        return new Token("ASSIGN");
+                        return new Token(sym.ASSIGN);
                     }
                 case 6:
                     if (c == '=') {
                         state = 7;
                         beginLexem = forward;
-                        return new Token(RELOP, "GE");
+                        return new Token(sym.GE);
                     } else {
                         state = 8;
                         retrack();
-                        return new Token(RELOP, "GT");
+                        return new Token(sym.GT);
                     }
                     //ID
                 case 10:
@@ -193,7 +193,7 @@ public class Lexer {
                     } else {
                         state = 20;
                         retrack();
-                        return new Token(NUMBER, lessema);
+                        return new Token(sym.NUMBER, lessema);
                     }
                     break;
                 case 13:
@@ -206,7 +206,7 @@ public class Lexer {
                     } else if (!Character.isDigit(c)) {
                         state = 20;
                         retrack();
-                        return new Token(NUMBER, lessema);
+                        return new Token(sym.NUMBER, lessema);
                     } else { //stiamo ancora leggendo un numero
                         lessema += c;
                         //lo stato è sempre 13 quindi non va modificato
@@ -230,7 +230,7 @@ public class Lexer {
                         //Avendo letto un carattere che non rispetta il pattern di alcun token,
                         //restituiamo l'ultimo token corretto prima del carattere "."
                         String x = lessema.substring(0,lessema.length()-1);
-                        return new Token(NUMBER, x);
+                        return new Token(sym.NUMBER, x);
                     }
                     break;
                 case 15:
@@ -246,7 +246,7 @@ public class Lexer {
                     } else {
                         state = 21;
                         retrack();
-                        return new Token(NUMBER, lessema);
+                        return new Token(sym.NUMBER, lessema);
                     }
                     break;
                 case 16:
@@ -268,7 +268,7 @@ public class Lexer {
                     if (!Character.isDigit(c)) {
                         state = 19;
                         retrack();
-                        return new Token(NUMBER, lessema);
+                        return new Token(sym.NUMBER, lessema);
                     } else { //sto leggendo ancora un numero
                         lessema += c;
                     }
@@ -289,7 +289,7 @@ public class Lexer {
                         retrack(); //Viene utilizzato due volte il metodo retrack perché dopo il punto
                         retrack(); //viene letto un carattere diverso da un digit
                         String x = lessema.substring(0,lessema.length()-zeroCounter-1);
-                        return new Token(NUMBER, x);
+                        return new Token(sym.NUMBER, x);
                     }
                     break;
                 case 31:
@@ -307,7 +307,7 @@ public class Lexer {
                         forward -= zeroCounter;
                         retrack();
                         String x = lessema.substring(0,lessema.length()-zeroCounter);
-                        return new Token(NUMBER, x);
+                        return new Token(sym.NUMBER, x);
                     }
                     break;
                 case 23:
@@ -331,7 +331,7 @@ public class Lexer {
         if(token != null){
             return token;
         } else { //se non lo è, allora è un ID
-            token =  new Token("ID", String.valueOf(idSymTab));
+            token =  new Token(sym.ID, String.valueOf(idSymTab));
             symbolTable.add(idSymTab, lessema, token);
             idSymTab++;
             return token;
