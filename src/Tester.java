@@ -16,5 +16,6 @@ public class Tester {
             System.out.println("The input string is invalid.");
         }
 
+        parser.printStringTable();
     }
 }

@@ -1,1 +1,3 @@
-IF prova > 30 THEN DO prova <-- 1 WHILE prova < 100
+IF prova > 30 THEN DO prova <-- 1 WHILE prova < 100 ELSE prova <-- 4;
+IF prova > 30 THEN DO prova <-- 1 WHILE prova < 100 ELSE prova <-- 4;
+a <-- 5; b <-- 10

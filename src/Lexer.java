@@ -5,8 +5,6 @@ import java.io.FileReader;
 public class Lexer {
 
     private static final boolean DEBUG = false;
-    private static final String RELOP = "RELOP";
-    private static final String NUMBER = "NUMBER";
     private int idSymTab;
     private SymbolTable symbolTable;
     private String buffer = "";
@@ -76,7 +74,7 @@ public class Lexer {
             c = buffer.charAt(forward);
             if(c == '\0') {
                 flag = false; //flag = false indica la fine del file
-                return new Token(sym.EOF);
+                System.out.println("Lexer: Ho raggiunto la fine del file");
             }
             forward++;
 
@@ -321,7 +319,8 @@ public class Lexer {
                     break;
             } //end switch
         }//end while
-        return null;
+        return new Token(sym.EOF);
+        //return null;
     }//end method
 
     private Token installID(String lessema){
