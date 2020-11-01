@@ -1,0 +1,1 @@
+IF prova > 30 THEN DO prova <-- 1 WHILE prova < 100

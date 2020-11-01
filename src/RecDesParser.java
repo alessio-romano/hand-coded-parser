@@ -25,6 +25,7 @@ public class RecDesParser {
 
     private Lexer lexer; //istanza dell'analizzatore lessicale
     private Token currentToken; //il token corrente che si sta analizzando
+    private int operators[] = {sym.LE, sym.LT, sym.GE, sym.GT, sym.EQ, sym.NE};
 
     public RecDesParser(String filePath){
         lexer = new Lexer();
@@ -32,11 +33,13 @@ public class RecDesParser {
     }
 
     public boolean S(){
+        System.out.println("sono in S");
         currentToken = lexer.nextToken();
         return Program() && EOF();
     }
 
     public boolean Program(){
+        System.out.println("sono in program");
         boolean result = Stmt() && Program1();
         if(!result){
             return false;
@@ -46,14 +49,15 @@ public class RecDesParser {
     }
 
     public boolean Program1(){
+        System.out.println("sono in program1");
         if(!currentToken.sameTokenType(sym.SEMICOLON)){
             return false;
         } else { //è stato letto ";"
+            currentToken = lexer.nextToken();
             if(!Stmt()){
                 return false;
             } else {
                 if(!Program1()){ //Program1 -> ɛ
-                    currentToken = lexer.nextToken();
                     return true;
                 }
                 return true;
@@ -62,22 +66,105 @@ public class RecDesParser {
     }
 
     public boolean Stmt(){
-
+        System.out.println("sono in statement");
+        if(!currentToken.sameTokenType(sym.IF)) {
+            if(!currentToken.sameTokenType(sym.ID)) {
+                if(!currentToken.sameTokenType(sym.DO)){
+                    return false;
+                }else {//il current token è DO
+                    System.out.println("ho letto do");
+                    currentToken = lexer.nextToken();
+                    if (!Stmt()) {
+                        return false;
+                    }
+                    else{
+                        if(!currentToken.sameTokenType(sym.WHILE)){
+                            return false;
+                        }
+                        else{
+                            System.out.println("ho letto while");
+                            currentToken = lexer.nextToken();
+                            if(!Expr()){
+                                return false;
+                            }
+                            else{
+                                currentToken = lexer.nextToken();
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            else{//il current token è ID
+                System.out.println("ho letto id");
+                currentToken = lexer.nextToken();
+                if(!currentToken.sameTokenType(sym.ASSIGN)){
+                    return false;
+                }
+                else{
+                    System.out.println("ho letto assign");
+                    currentToken = lexer.nextToken();
+                    if(!Expr()){
+                        return false;
+                    }
+                    else{
+                        currentToken = lexer.nextToken();
+                        return true;
+                    }
+                }
+            }
+        }
+        else{ //il current token è IF
+            System.out.println("ho letto if");
+            currentToken = lexer.nextToken();
+            if(!Expr()){
+                return false;
+            }
+            else{
+                currentToken = lexer.nextToken();
+                if(!currentToken.sameTokenType(sym.THEN)){
+                    return false;
+                }
+                else{
+                    System.out.println("ho letto then");
+                    currentToken = lexer.nextToken();
+                    if(!Stmt()){
+                        return false;
+                    }
+                    else{
+                        currentToken = lexer.nextToken();
+                        return true; //controllo ELSE->controllo STMT
+                    }
+                }
+            }
+        }
     }
 
     public boolean Expr(){
-        boolean result = Expr1() && Expr2();
-        if(!result){
+        System.out.println("sono in expr");
+
+        if(!Expr2()) {
             return false;
         }
-        currentToken = lexer.nextToken();
-        return true;
+        else{
+            currentToken = lexer.nextToken();
+            if(!Expr1()){
+                return false;
+            }
+            else{
+                return true;
+            }
+        }
+
     }
 
     public boolean Expr1(){
+        System.out.println("sono in expr1 - currenttoken:"+currentToken);
         if(!Relop()){
-            return false;
+            System.out.println("Non ho letto relop");
+            return true;
         } else { //abbiamo trovato un operatore di confronto
+            System.out.println("Ho letto relop");
             if(!Expr2()){
                 return false;
             } else { //abbiamo trovato ID o NUMBER
@@ -91,51 +178,34 @@ public class RecDesParser {
     }
 
     public boolean Expr2(){
-
-        if(!currentToken.sameTokenType(sym.ID)){
+        System.out.println("sono in expr2");
+        if(!(currentToken.sameTokenType(sym.ID) || currentToken.sameTokenType(sym.NUMBER))){
             return false;
         }
-
-        if(!currentToken.sameTokenType(sym.NUMBER)){
-            return false;
-        }
-
+        System.out.println("Current token prima dell'aggiornamento in expr2 "+currentToken);
         currentToken = lexer.nextToken();
+        System.out.println("Current token dopo dell'aggiornamento in expr2 \n"+currentToken);
         return true;
     }
 
     public boolean Relop(){
-
-        if(!currentToken.sameTokenType(sym.LT)){
-            return false;
+        System.out.println("sono in relop");
+        System.out.println(currentToken);
+        for(int x : operators){
+            if(currentToken.sameTokenType(x)) {
+                currentToken = lexer.nextToken();
+                return true;
+            }
         }
-
-        if(!currentToken.sameTokenType(sym.GT)){
-            return false;
-        }
-
-        if(!currentToken.sameTokenType(sym.LE)){
-            return false;
-        }
-
-        if(!currentToken.sameTokenType(sym.GE)){
-            return false;
-        }
-
-        if(!currentToken.sameTokenType(sym.NE)){
-            return false;
-        }
-
-        if(!currentToken.sameTokenType(sym.EQ)){
-            return false;
-        }
-
-        currentToken = lexer.nextToken();
-        return true;
+        return false;
     }
 
     public boolean EOF(){
-
+        System.out.println("sono in eof");
+        if(!currentToken.sameTokenType(sym.EOF)){
+            return false;
+        }
+        return true;
     }
 
 }
