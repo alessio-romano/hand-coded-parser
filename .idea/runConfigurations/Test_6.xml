@@ -1,8 +1,8 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Test_4" type="Application" factoryName="Application">
+  <configuration default="false" name="Test_6" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="Tester" />
     <module name="Romano-Antonucci_es3_hcp" />
-    <option name="PROGRAM_PARAMETERS" value="test_files/file_source4" />
+    <option name="PROGRAM_PARAMETERS" value="test_files/file_source6" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

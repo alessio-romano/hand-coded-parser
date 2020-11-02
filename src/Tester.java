@@ -1,4 +1,5 @@
 public class Tester {
+    private static final boolean DEBUG = false;
 
     public static void main(String[] args) throws Exception {
 
@@ -16,6 +17,6 @@ public class Tester {
             System.out.println("The input string is invalid.");
         }
 
-        parser.printStringTable();
+        if(DEBUG) parser.printStringTable();
     }
 }

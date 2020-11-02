@@ -74,7 +74,7 @@ public class Lexer {
             c = buffer.charAt(forward);
             if(c == '\0') {
                 flag = false; //flag = false indica la fine del file
-                System.out.println("Lexer: Ho raggiunto la fine del file");
+                if (DEBUG) System.out.println("Lexer: Ho raggiunto la fine del file");
             }
             forward++;
 
