@@ -325,11 +325,11 @@ public class Lexer {
 
     private Token installID(String lessema){
         Token token;
-        //Verifico se il lessema riconosciuto è una parola chiave
+        //Verifico se il lessema riconosciuto è una parola chiave oppure un id già dichiarato
         token = symbolTable.contain(lessema);
         if(token != null){
             return token;
-        } else { //se non lo è, allora è un ID
+        } else { //se non lo è, allora è un nuovo ID
             token =  new Token(sym.ID, String.valueOf(idSymTab));
             symbolTable.add(idSymTab, lessema, token);
             idSymTab++;

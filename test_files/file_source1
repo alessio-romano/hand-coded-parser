@@ -1,9 +1,9 @@
-if id < 2.0 then
+if id < 2 then
     do
         if y < id then
-            while id do x <-- id;
+            do x <-- id while id
         else
-            x <-- 3;
+            x <-- 3
     while id 
 else
     prova <-- 3
