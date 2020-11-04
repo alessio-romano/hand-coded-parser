@@ -2,7 +2,6 @@ import java.util.ArrayList;
 
 public class SymbolTable {
     private ArrayList<SymbolTableRow> symTab;
-    private String[] keywords = {"IF", "THEN", "ELSE", "DO", "WHILE", "INT", "FLOAT"};
 
     public SymbolTable() {
         this.symTab = new ArrayList<>();
@@ -13,20 +12,11 @@ public class SymbolTable {
     }
 
     public Token contain(String lessema){
-        //Verifico se è una parola chiave in quanto le parole chiavi possono
-        // essere scritte sia in Maiuscolo sia in minuscolo.
-        for(String x: keywords){
-            if(lessema.equalsIgnoreCase(x)){//se è una parola chiave, la trasformo in una stringa in Maiuscolo
-                lessema = lessema.toUpperCase();
-            }
-        }
-
         for(SymbolTableRow s: symTab){
             if(s.lessema.equals(lessema)){
                 return s.token;
             }
         }
-
         return null;
     }
 

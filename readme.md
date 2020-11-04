@@ -9,12 +9,8 @@ Scelte di progettazione
    di terminare la sua esecuzione.
 3. Il Parser a discesa ricorsiva è stato progettato in modo che i **token** al Lexer siano **ottenuti su richesta**. <br/>
    Non abbiamo quindi usato un array come nell'esempio fornito.
-4. Per le _keywords_ si è deciso che siano **case insensitive** (ad es. `if` e `IF` vengono gestiti allo stesso modo). <br/> 
-   Questa decisione è stata presa in quanto nella grammatica di riferimento per il parser le keywords sono
-   tutte in maiuscolo, mentre nei file di test si è usato anche il minuscolo.
-5. Conseguentemente al punto 4., si è deciso che i **token ID** siano **case sensitive** (ad es. `<ID,"a">` è un **token diverso** 
-   da `<ID,"A">`).
-
+4. A seguito dei risultati dei test preliminari, si è deciso che le _keywords_ debbano essere in **minuscolo**. <br/>
+   (Si può far riferimento al test sul `file_source8` in cui non tutte le keywords rispettano questa scelta)
 
 Testing
 -------
@@ -48,5 +44,6 @@ I risultati ottenuti a seguito dei test effettuati sono quelli riportati nella s
 |file_source5 | Non Valido |
 |file_source6 | Valido |
 |file_source7 | Non Valido |
-|file_source8 | Valido |
+|file_source8 | Non Valido |
 |file_source9 | Valido |
+|file_source10 | Valido |

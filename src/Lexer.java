@@ -43,7 +43,9 @@ public class Lexer {
             int keywords[] = {sym.IF, sym.THEN, sym.ELSE, sym.DO, sym.WHILE, sym.INT, sym.FLOAT};
 
             for(int x: keywords) {
-                symbolTable.add(idSymTab++, sym.tokens[x], new Token(x));
+                //viene chiamato il metodo toLowerCase() in quanto le parole chiave devono essere necessariamente
+                //in minuscolo.
+                symbolTable.add(idSymTab++, sym.tokens[x].toLowerCase(), new Token(x));
             }
             return true;
         }
